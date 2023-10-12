@@ -1,1 +1,1 @@
-# SU
+# Beal Conjecture
