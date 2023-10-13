@@ -1,0 +1,3 @@
+﻿  Beal Conjecture.cpp
+H:\Desktop\Beal-Conjecture\Beal Conjecture.cpp(72,19): error C2039: 'pow_1': is not a member of 'Power'
+H:\Desktop\Beal-Conjecture\Beal Conjecture.cpp(10,7): message : see declaration of 'Power'
