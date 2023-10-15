@@ -1,3 +1,4 @@
 ﻿  Beal Conjecture.cpp
-H:\Desktop\Beal-Conjecture\Beal Conjecture.cpp(72,19): error C2039: 'pow_1': is not a member of 'Power'
-H:\Desktop\Beal-Conjecture\Beal Conjecture.cpp(10,7): message : see declaration of 'Power'
+C:\Users\41462\Desktop\Beal-Conjecture\Beal Conjecture.cpp(88,28): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
+C:\Users\41462\Desktop\Beal-Conjecture\Beal Conjecture.cpp(116,33): warning C4267: “参数”: 从“size_t”转换到“int”，可能丢失数据
+  Beal Conjecture.vcxproj -> C:\Users\41462\Desktop\Beal-Conjecture\x64\Debug\Beal Conjecture.exe
