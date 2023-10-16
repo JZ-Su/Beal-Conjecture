@@ -1,6 +1,6 @@
 ﻿  Beal Conjecture.cpp
-H:\Desktop\Beal-Conjecture\Beal Conjecture.cpp(103,27): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
-H:\Desktop\Beal-Conjecture\Beal Conjecture.cpp(131,33): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-H:\Desktop\Beal-Conjecture\Beal Conjecture.cpp(190,6): warning C4101: 'low': unreferenced local variable
-H:\Desktop\Beal-Conjecture\Beal Conjecture.cpp(190,11): warning C4101: 'high': unreferenced local variable
+H:\Desktop\Beal-Conjecture\Beal Conjecture.cpp(108,27): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+H:\Desktop\Beal-Conjecture\Beal Conjecture.cpp(138,33): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+H:\Desktop\Beal-Conjecture\Beal Conjecture.cpp(193,6): warning C4101: 'low': unreferenced local variable
+H:\Desktop\Beal-Conjecture\Beal Conjecture.cpp(193,11): warning C4101: 'high': unreferenced local variable
   Beal Conjecture.vcxproj -> H:\Desktop\Beal-Conjecture\x64\Debug\Beal Conjecture.exe

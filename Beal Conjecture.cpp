@@ -2,14 +2,18 @@
 #include <vector>
 #include <cmath>
 #include <thread>
+#include <iomanip>
+
+#include <ctime>
+
 #define MinBase 2
-#define MaxBase 80
+#define MaxBase 128
 #define MinIndex 3
-#define MaxIndex 15
+#define MaxIndex 20
 
 using namespace std;
 
-const vector<int> primeNum = { 2,3,5,7,11,13,17,19 };
+const vector<int> primeNum = { 2,3,5,7,11,13,17,19,23,29,31,37,41 };
 
 class Power
 {
@@ -95,12 +99,14 @@ int main() {
 	vector<Power> hashTable[10];
 	vector<BNT> BNTs;
 	Power po;
+	std::time_t beginTime = std::time(nullptr);
 	for (int i = MinBase; i <= MaxBase; i++) {
 		for (int j = MinIndex; j <= MaxIndex; j++) {
 			po.base = i;
 			po.index = j;
 			if (j * log2(i) >= 64.0) {
 				po.secondDigit = floor(std::pow(2, j * log2(i) - 64));
+				if (po.secondDigit <= 0) break;
 				po.firstDigit = pow<unsigned long long>(i, j);
 				hashTable[(po.firstDigit % 10 + static_cast<unsigned long long>(po.secondDigit) * 6) % 10].push_back(po);
 			}
@@ -109,7 +115,7 @@ int main() {
 				po.firstDigit = pow<unsigned long long>(i, j);
 				hashTable[po.firstDigit % 10].push_back(po);
 			}
-			cout << "base: " << po.base << "\t index: " << po.index << "\t secondDigit: " << po.secondDigit << "\t firstDigit: " << po.firstDigit << endl;
+			cout << "base: " << setw(3) << po.base << "\t index: " << setw(2) << po.index << "\t secondDigit: " << setw(10) << po.secondDigit << "\t firstDigit: " << po.firstDigit << endl;
 		}
 	}
 
@@ -120,6 +126,7 @@ int main() {
 					int mantissa = (i + x) % 10;
 					for (int m = 0; m < hashTable[mantissa].size(); m++) {
 						if (matchBNT(hashTable[i][j], hashTable[x][y], hashTable[mantissa][m])) {
+							cout << hashTable[i][j].base << " " << hashTable[i][j].index << " " << hashTable[x][y].base << " " << hashTable[x][y].index << " " << hashTable[mantissa][m].base << " " << hashTable[mantissa][m].index << endl;
 							BNTs.push_back(BNT(hashTable[i][j].base, hashTable[x][y].base, hashTable[mantissa][m].base, hashTable[i][j].index, hashTable[x][y].index, hashTable[mantissa][m].index));
 						}
 					}
@@ -130,6 +137,10 @@ int main() {
 
 	quickSort(BNTs, 0, BNTs.size() - 1);
 
+	for (int i = 0; i < BNTs.size(); i++) {
+		printBNT(BNTs[i]);
+	}
+
 	// Question 1
 	int count = 0, bnt = 0;
 	cout << "Question 1: " << endl;
@@ -138,7 +149,6 @@ int main() {
 			bnt = BNTs[i].sum;
 			count++;
 			printBNT(BNTs[i]);
-			// cout << BNTs[i].sum << ": " << BNTs[i].A << ", " << BNTs[i].x << ", " << BNTs[i].B << ", " << BNTs[i].y << ", " << BNTs[i].C << ", " << BNTs[i].z << endl;
 			if (count == 5) break;
 		}
 	}
@@ -152,7 +162,6 @@ int main() {
 			if (isPrime(bnt)) {
 				count++;
 				printBNT(BNTs[i]);
-				// cout << BNTs[i].sum << ": " << BNTs[i].A << ", " << BNTs[i].x << ", " << BNTs[i].B << ", " << BNTs[i].y << ", " << BNTs[i].C << ", " << BNTs[i].z << endl;
 				if (count == 5) break;
 			}
 		}
@@ -163,13 +172,8 @@ int main() {
 	for (int i = 0; i < BNTs.size(); i++) {
 		if (BNTs[i].A >= 3 && BNTs[i].B >= 3 && BNTs[i].C >= 3 && BNTs[i].A <= 20 && BNTs[i].B <= 20 && BNTs[i].C <= 20) {
 			printBNT(BNTs[i]);
-			// cout << BNTs[i].sum << ": " << BNTs[i].A << ", " << BNTs[i].x << ", " << BNTs[i].B << ", " << BNTs[i].y << ", " << BNTs[i].C << ", " << BNTs[i].z << endl;
 		}
 	}
-
-	/*for (int i = 0; i < BNTs.size(); i++) {
-		cout << BNTs[i].sum << ": " << BNTs[i].A << ", " << BNTs[i].x << ", " << BNTs[i].B << ", " << BNTs[i].y << ", " << BNTs[i].C << ", " << BNTs[i].z << endl;
-	}*/
 
 	// Question 5
 	cout << "Question 5: " << endl;
@@ -180,7 +184,6 @@ int main() {
 			if (!isPrime(bnt)) {
 				count++;
 				printBNT(BNTs[i]);
-				// cout << BNTs[i].sum << ": " << BNTs[i].A << ", " << BNTs[i].x << ", " << BNTs[i].B << ", " << BNTs[i].y << ", " << BNTs[i].C << ", " << BNTs[i].z << endl;
 				if (count == 10) break;
 			}
 		}
@@ -189,5 +192,8 @@ int main() {
 	// Question 7
 	int low, high;
 
+	std::time_t endTime = std::time(nullptr);
+
+	cout << endl << "Costing time: " << endTime - beginTime << "s" << endl;
 	return 0;
 }
