@@ -4,6 +4,7 @@
 #include <thread>
 #include <iomanip>
 #include <Windows.h>
+#include <fstream>
 
 #include "class.h"
 
@@ -25,18 +26,18 @@ template <typename T> T pow(int base, int index) {
 	return pow;
 }
 
-int partition(vector<BNT>& arr, int low, int high);
-void quickSort(vector<BNT>& arr, int low, int high);
-bool isPrime(int num);
+int partition(vector<BNT>&, int, int);
+void quickSort(vector<BNT>&, int, int);
+bool isPrime(int);
 void isLoading();
-void Question1(vector<BNT>& BNTs);
-void Question2(vector<BNT>& BNTs);
-void Question3(vector<BNT>& BNTs);
-void Question4(vector<BNT>& BNTs);
-void Question5(vector<BNT>& BNTs);
+void Question1(vector<BNT>&);
+void Question2(vector<BNT>&);
+void Question3(vector<BNT>&);
+void Question4(vector<BNT>&);
+void Question5(vector<BNT>&);
 void Question6();
-void Question7(vector<BNT>& BNTs);
-void Question8(vector<BNT>& BNTs);
+void Question7(vector<BNT>&);
+void Question8(vector<BNT>&);
 
 int main() {
 	thread ld(isLoading);
@@ -89,7 +90,7 @@ int main() {
 	cout << "Question 5: Find the first ten BNTs that are composite numbers." << endl;
 	cout << "Question 6: Find the BNTs that are square numbers between 1000 and 100000." << endl;
 	cout << "Question 7: Input a minimum number(>=" << BNTs[0].sum << ") and a maximum number(<=" << BNTs[BNTs.size() - 1].sum << ") to generate an ASCII histogram." << endl;
-	cout << "Question 8: Find the highest BNT. (A, B and C must all be greater than 2)" << endl ;
+	cout << "Question 8: Find the highest BNT. (A, B and C must all be greater than 2)" << endl;
 
 	do {
 		cout << endl << "Input a question number (1~8, 0 to exit): ";
@@ -97,28 +98,28 @@ int main() {
 		cout << endl;
 		switch (questionNum)
 		{
-		case 1: 
+		case 1:
 			Question1(BNTs);
 			break;
-		case 2: 
+		case 2:
 			Question2(BNTs);
 			break;
-		case 3: 
+		case 3:
 			Question3(BNTs);
 			break;
-		case 4: 
+		case 4:
 			Question4(BNTs);
 			break;
-		case 5: 
+		case 5:
 			Question5(BNTs);
 			break;
-		case 6: 
+		case 6:
 			Question6();
 			break;
-		case 7: 
+		case 7:
 			Question7(BNTs);
 			break;
-		case 8: 
+		case 8:
 			Question8(BNTs);
 			break;
 		case 0: return 0;
@@ -166,15 +167,35 @@ bool isPrime(int num) {
 void isLoading() {
 	do
 	{
-		cout << "\rLoading... [";
+		cout << "\rLoading.   [";
 		for (int i = 0; i < loading; i++) {
-			cout << "▉";
+			cout << "o";
 		}
 		for (int i = loading; i < 11; i++) {
 			cout << ".";
 		}
 		cout << "]";
-		Sleep(100);
+		Sleep(500);
+
+		cout << "\rLoading..  [";
+		for (int i = 0; i < loading; i++) {
+			cout << "o";
+		}
+		for (int i = loading; i < 11; i++) {
+			cout << ".";
+		}
+		cout << "]";
+		Sleep(500);
+
+		cout << "\rLoading... [";
+		for (int i = 0; i < loading; i++) {
+			cout << "o";
+		}
+		for (int i = loading; i < 11; i++) {
+			cout << ".";
+		}
+		cout << "]";
+		Sleep(500);
 	} while (loading != 12);
 	cout << "\rLoading Completed!         " << endl;
 }
@@ -193,8 +214,8 @@ void Question1(vector<BNT>& BNTs) {
 };
 
 void Question2(vector<BNT>& BNTs) {
-	cout << "Question 2: " << endl;
 	int count = 0, bnt = 0;
+	cout << "Question 2: " << endl;
 	for (int i = 0; i < BNTs.size(); i++) {
 		if (BNTs[i].sum != bnt) {
 			bnt = BNTs[i].sum;
@@ -210,13 +231,53 @@ void Question2(vector<BNT>& BNTs) {
 void Question3(vector<BNT>& BNTs) {
 	cout << "Question 3: " << endl;
 	for (int i = 0; i < BNTs.size(); i++) {
-		if (BNTs[i].A >= 3 && BNTs[i].B >= 3 && BNTs[i].C >= 3 && BNTs[i].A <= 20 && BNTs[i].B <= 20 && BNTs[i].C <= 20) {
+		if (BNTs[i].A >= 3 && BNTs[i].B >= 3 && BNTs[i].C >= 3 && BNTs[i].A <= 20 && BNTs[i].B <= 20 && BNTs[i].C <= 20 && BNTs[i].x <= 15 && BNTs[i].y <= 15 && BNTs[i].z <= 15) {
 			cout << BNTs[i].sum << ": " << BNTs[i].A << ", " << BNTs[i].x << ", " << BNTs[i].B << ", " << BNTs[i].y << ", " << BNTs[i].C << ", " << BNTs[i].z << endl;
 		}
 	}
 };
 
-void Question4(vector<BNT>& BNTs) {};
+void Question4(vector<BNT>& BNTs) {
+	ofstream file;
+	file.open("BNTs.txt", ios::out | ios::trunc);
+
+	int count = 0, bnt = 0;
+	file << "Question 1: " << endl;
+	for (int i = 0; i < BNTs.size(); i++) {
+		if (BNTs[i].sum != bnt) {
+			bnt = BNTs[i].sum;
+			count++;
+			file << BNTs[i].sum << ": " << BNTs[i].A << ", " << BNTs[i].x << ", " << BNTs[i].B << ", " << BNTs[i].y << ", " << BNTs[i].C << ", " << BNTs[i].z << endl;
+			if (count == 5) break;
+		}
+	}
+
+	file << endl;
+
+	file << "Question 2: " << endl;
+	count = 0;
+	for (int i = 0; i < BNTs.size(); i++) {
+		if (BNTs[i].sum != bnt) {
+			bnt = BNTs[i].sum;
+			if (isPrime(bnt)) {
+				count++;
+				file << BNTs[i].sum << ": " << BNTs[i].A << ", " << BNTs[i].x << ", " << BNTs[i].B << ", " << BNTs[i].y << ", " << BNTs[i].C << ", " << BNTs[i].z << endl;
+				if (count == 5) break;
+			}
+		}
+	}
+
+	file << endl;
+
+	file << "Question 3: " << endl;
+	for (int i = 0; i < BNTs.size(); i++) {
+		if (BNTs[i].A >= 3 && BNTs[i].B >= 3 && BNTs[i].C >= 3 && BNTs[i].A <= 20 && BNTs[i].B <= 20 && BNTs[i].C <= 20 && BNTs[i].x <= 15 && BNTs[i].y <= 15 && BNTs[i].z <= 15) {
+			file << BNTs[i].sum << ": " << BNTs[i].A << ", " << BNTs[i].x << ", " << BNTs[i].B << ", " << BNTs[i].y << ", " << BNTs[i].C << ", " << BNTs[i].z << endl;
+		}
+	}
+
+	cout << "Writing Completed!" << endl;
+};
 
 void Question5(vector<BNT>& BNTs) {
 	cout << "Question 5: " << endl;
@@ -286,8 +347,7 @@ void Question7(vector<BNT>& BNTs) {
 
 void Question8(vector<BNT>& BNTs) {
 	int i = BNTs.size() - 1;
-	while (BNTs[i].A == 2 || BNTs[i].B == 2 || BNTs[i].C == 2)
-	{
+	while (BNTs[i].A == 2 || BNTs[i].B == 2 || BNTs[i].C == 2) {
 		i--;
 		if (i == 0) break;
 	}
