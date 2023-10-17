@@ -8,8 +8,10 @@
 
 #include "class.h"
 
+#include <ctime>
+
 #define MinBase 2
-#define MaxBase 128
+#define MaxBase 256
 #define MinExponent 3
 #define MaxExponent 20
 
@@ -38,8 +40,10 @@ void Question5(vector<BNT>&);
 void Question6();
 void Question7(vector<BNT>&);
 void Question8(vector<BNT>&);
+void PrintAll(vector<BNT>&);
 
 int main() {
+	std::time_t beginTime = time(nullptr);
 	thread ld(isLoading);
 	vector<Power> hashTable[10];
 	vector<BNT> BNTs;
@@ -67,6 +71,7 @@ int main() {
 		for (int j = 0; j < hashTable[i].size(); j++) {
 			for (int x = 0; x < 10; x++) {
 				for (int y = 0; y < hashTable[x].size(); y++) {
+					if (_Gcd(hashTable[i][j].base, hashTable[x][y].base) == 1) continue;
 					int mantissa = (i + x) % 10;
 					for (int m = 0; m < hashTable[mantissa].size(); m++) {
 						if ((hashTable[i][j] + hashTable[x][y]) == hashTable[mantissa][m]) {
@@ -82,6 +87,9 @@ int main() {
 	loading++;
 	ld.join();
 
+	std::time_t endTime = time(nullptr);
+	cout << endl << "Costing time: " << endTime - beginTime << " s" << endl;
+
 	int questionNum = 0;
 	cout << "Question 1: Find the first five distinct and lowest BNTs." << endl;
 	cout << "Question 2: Find the first five BNTs that are prime numbers." << endl;
@@ -91,9 +99,10 @@ int main() {
 	cout << "Question 6: Find the BNTs that are square numbers between 1000 and 100000." << endl;
 	cout << "Question 7: Input a minimum number(>=" << BNTs[0].sum << ") and a maximum number(<=" << BNTs[BNTs.size() - 1].sum << ") to generate an ASCII histogram." << endl;
 	cout << "Question 8: Find the highest BNT. (A, B and C must all be greater than 2)" << endl;
+	cout << "Enter 9 to show all the BNTs." << endl;
 
 	do {
-		cout << endl << "Input a question number (1~8, 0 to exit): ";
+		cout << endl << "Input a question number (1~8, 0 or other to exit): ";
 		cin >> questionNum;
 		cout << endl;
 		switch (questionNum)
@@ -122,9 +131,12 @@ int main() {
 		case 8:
 			Question8(BNTs);
 			break;
-		case 0: return 0;
-		default:
+		case 9:
+			PrintAll(BNTs);
 			break;
+		case 0:
+		default:
+			return 0;
 		}
 	} while (true);
 
@@ -276,6 +288,8 @@ void Question4(vector<BNT>& BNTs) {
 		}
 	}
 
+	file.close();
+
 	cout << "Writing Completed!" << endl;
 };
 
@@ -353,3 +367,9 @@ void Question8(vector<BNT>& BNTs) {
 	}
 	cout << BNTs[i].sum << ": " << BNTs[i].A << ", " << BNTs[i].x << ", " << BNTs[i].B << ", " << BNTs[i].y << ", " << BNTs[i].C << ", " << BNTs[i].z << endl;
 };
+
+void PrintAll(vector<BNT>& BNTs) {
+	for (int i = 0; i < BNTs.size(); i++) {
+		cout << BNTs[i].sum << ": " << BNTs[i].A << ", " << BNTs[i].x << ", " << BNTs[i].B << ", " << BNTs[i].y << ", " << BNTs[i].C << ", " << BNTs[i].z << endl;
+	}
+}
