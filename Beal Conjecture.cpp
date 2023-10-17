@@ -3,40 +3,19 @@
 #include <cmath>
 #include <thread>
 #include <iomanip>
+#include <Windows.h>
 
-#include <ctime>
+#include "class.h"
 
 #define MinBase 2
 #define MaxBase 128
-#define MinIndex 3
-#define MaxIndex 20
+#define MinExponent 3
+#define MaxExponent 20
 
 using namespace std;
 
 const vector<int> primeNum = { 2,3,5,7,11,13,17,19,23,29,31,37,41 };
-
-class Power
-{
-public:
-	int base;
-	int index;
-	int secondDigit;
-	unsigned long long firstDigit;
-};
-
-class BNT
-{
-public:
-	BNT(int A, int B, int C, int x, int y, int z);
-	int sum;
-	int A, B, C;
-	int x, y, z;
-};
-
-BNT::BNT(int A, int B, int C, int x, int y, int z) : A(A), B(B), C(C), x(x), y(y), z(z)
-{
-	sum = A + B + C + x + y + z;
-}
+int loading = 0;
 
 template <typename T> T pow(int base, int index) {
 	T pow = base;
@@ -46,16 +25,109 @@ template <typename T> T pow(int base, int index) {
 	return pow;
 }
 
-bool matchBNT(Power x, Power y, Power z) {
-	if (x.firstDigit + y.firstDigit == z.firstDigit) {
-		if (x.secondDigit + y.secondDigit == z.secondDigit) {
-			return true;
-		}
-		else if (x.secondDigit + y.secondDigit - 1 == z.secondDigit && x.firstDigit > z.firstDigit && y.firstDigit > z.firstDigit) {
-			return true;
+int partition(vector<BNT>& arr, int low, int high);
+void quickSort(vector<BNT>& arr, int low, int high);
+bool isPrime(int num);
+void isLoading();
+void Question1(vector<BNT>& BNTs);
+void Question2(vector<BNT>& BNTs);
+void Question3(vector<BNT>& BNTs);
+void Question4(vector<BNT>& BNTs);
+void Question5(vector<BNT>& BNTs);
+void Question6();
+void Question7(vector<BNT>& BNTs);
+void Question8(vector<BNT>& BNTs);
+
+int main() {
+	thread ld(isLoading);
+	vector<Power> hashTable[10];
+	vector<BNT> BNTs;
+	Power po;
+	for (int i = MinBase; i <= MaxBase; i++) {
+		for (int j = MinExponent; j <= MaxExponent; j++) {
+			po.base = i;
+			po.exponent = j;
+			if (j * log2(i) >= 64.0) {
+				po.secondDigit = floor(std::pow(2, j * log2(i) - 64));
+				if (po.secondDigit <= 0) break;
+				po.firstDigit = pow<unsigned long long>(i, j);
+				hashTable[(po.firstDigit % 10 + static_cast<unsigned long long>(po.secondDigit) * 6) % 10].push_back(po);
+			}
+			else {
+				po.secondDigit = 0;
+				po.firstDigit = pow<unsigned long long>(i, j);
+				hashTable[po.firstDigit % 10].push_back(po);
+			}
 		}
 	}
-	return false;
+	loading++;
+
+	for (int i = 0; i < 10; i++) {
+		for (int j = 0; j < hashTable[i].size(); j++) {
+			for (int x = 0; x < 10; x++) {
+				for (int y = 0; y < hashTable[x].size(); y++) {
+					int mantissa = (i + x) % 10;
+					for (int m = 0; m < hashTable[mantissa].size(); m++) {
+						if ((hashTable[i][j] + hashTable[x][y]) == hashTable[mantissa][m]) {
+							BNTs.push_back(BNT(hashTable[i][j].base, hashTable[x][y].base, hashTable[mantissa][m].base, hashTable[i][j].exponent, hashTable[x][y].exponent, hashTable[mantissa][m].exponent));
+						}
+					}
+				}
+			}
+		}
+		loading++;
+	}
+	quickSort(BNTs, 0, BNTs.size() - 1);
+	loading++;
+	ld.join();
+
+	int questionNum = 0;
+	cout << "Question 1: Find the first five distinct and lowest BNTs." << endl;
+	cout << "Question 2: Find the first five BNTs that are prime numbers." << endl;
+	cout << "Question 3: Find the BNTs where A, B, C belong to [3, 20] and x, y, z belong to [3, 15]." << endl;
+	cout << "Question 4: Write the outputs to file (Filename: BNTs.txt)." << endl;
+	cout << "Question 5: Find the first ten BNTs that are composite numbers." << endl;
+	cout << "Question 6: Find the BNTs that are square numbers between 1000 and 100000." << endl;
+	cout << "Question 7: Input a minimum number(>=" << BNTs[0].sum << ") and a maximum number(<=" << BNTs[BNTs.size() - 1].sum << ") to generate an ASCII histogram." << endl;
+	cout << "Question 8: Find the highest BNT. (A, B and C must all be greater than 2)" << endl ;
+
+	do {
+		cout << endl << "Input a question number (1~8, 0 to exit): ";
+		cin >> questionNum;
+		cout << endl;
+		switch (questionNum)
+		{
+		case 1: 
+			Question1(BNTs);
+			break;
+		case 2: 
+			Question2(BNTs);
+			break;
+		case 3: 
+			Question3(BNTs);
+			break;
+		case 4: 
+			Question4(BNTs);
+			break;
+		case 5: 
+			Question5(BNTs);
+			break;
+		case 6: 
+			Question6();
+			break;
+		case 7: 
+			Question7(BNTs);
+			break;
+		case 8: 
+			Question8(BNTs);
+			break;
+		case 0: return 0;
+		default:
+			break;
+		}
+	} while (true);
+
+	return 0;
 }
 
 int partition(vector<BNT>& arr, int low, int high) {
@@ -91,109 +163,133 @@ bool isPrime(int num) {
 	return true;
 }
 
-void printBNT(BNT bnt) {
-	cout << bnt.sum << ": " << bnt.A << ", " << bnt.x << ", " << bnt.B << ", " << bnt.y << ", " << bnt.C << ", " << bnt.z << endl;
+void isLoading() {
+	do
+	{
+		cout << "\rLoading... [";
+		for (int i = 0; i < loading; i++) {
+			cout << "▉";
+		}
+		for (int i = loading; i < 11; i++) {
+			cout << ".";
+		}
+		cout << "]";
+		Sleep(100);
+	} while (loading != 12);
+	cout << "\rLoading Completed!         " << endl;
 }
 
-int main() {
-	vector<Power> hashTable[10];
-	vector<BNT> BNTs;
-	Power po;
-	std::time_t beginTime = std::time(nullptr);
-	for (int i = MinBase; i <= MaxBase; i++) {
-		for (int j = MinIndex; j <= MaxIndex; j++) {
-			po.base = i;
-			po.index = j;
-			if (j * log2(i) >= 64.0) {
-				po.secondDigit = floor(std::pow(2, j * log2(i) - 64));
-				if (po.secondDigit <= 0) break;
-				po.firstDigit = pow<unsigned long long>(i, j);
-				hashTable[(po.firstDigit % 10 + static_cast<unsigned long long>(po.secondDigit) * 6) % 10].push_back(po);
-			}
-			else {
-				po.secondDigit = 0;
-				po.firstDigit = pow<unsigned long long>(i, j);
-				hashTable[po.firstDigit % 10].push_back(po);
-			}
-			cout << "base: " << setw(3) << po.base << "\t index: " << setw(2) << po.index << "\t secondDigit: " << setw(10) << po.secondDigit << "\t firstDigit: " << po.firstDigit << endl;
-		}
-	}
-
-	for (int i = 0; i < 10; i++) {
-		for (int j = 0; j < hashTable[i].size(); j++) {
-			for (int x = 0; x < 10; x++) {
-				for (int y = 0; y < hashTable[x].size(); y++) {
-					int mantissa = (i + x) % 10;
-					for (int m = 0; m < hashTable[mantissa].size(); m++) {
-						if (matchBNT(hashTable[i][j], hashTable[x][y], hashTable[mantissa][m])) {
-							cout << hashTable[i][j].base << " " << hashTable[i][j].index << " " << hashTable[x][y].base << " " << hashTable[x][y].index << " " << hashTable[mantissa][m].base << " " << hashTable[mantissa][m].index << endl;
-							BNTs.push_back(BNT(hashTable[i][j].base, hashTable[x][y].base, hashTable[mantissa][m].base, hashTable[i][j].index, hashTable[x][y].index, hashTable[mantissa][m].index));
-						}
-					}
-				}
-			}
-		}
-	}
-
-	quickSort(BNTs, 0, BNTs.size() - 1);
-
-	for (int i = 0; i < BNTs.size(); i++) {
-		printBNT(BNTs[i]);
-	}
-
-	// Question 1
+void Question1(vector<BNT>& BNTs) {
 	int count = 0, bnt = 0;
 	cout << "Question 1: " << endl;
 	for (int i = 0; i < BNTs.size(); i++) {
 		if (BNTs[i].sum != bnt) {
 			bnt = BNTs[i].sum;
 			count++;
-			printBNT(BNTs[i]);
+			cout << BNTs[i].sum << ": " << BNTs[i].A << ", " << BNTs[i].x << ", " << BNTs[i].B << ", " << BNTs[i].y << ", " << BNTs[i].C << ", " << BNTs[i].z << endl;
 			if (count == 5) break;
 		}
 	}
+};
 
-	// Question 2
+void Question2(vector<BNT>& BNTs) {
 	cout << "Question 2: " << endl;
-	count = 0, bnt = 0;
+	int count = 0, bnt = 0;
 	for (int i = 0; i < BNTs.size(); i++) {
-		if (BNTs[i].sum != bnt ) {
+		if (BNTs[i].sum != bnt) {
 			bnt = BNTs[i].sum;
 			if (isPrime(bnt)) {
 				count++;
-				printBNT(BNTs[i]);
+				cout << BNTs[i].sum << ": " << BNTs[i].A << ", " << BNTs[i].x << ", " << BNTs[i].B << ", " << BNTs[i].y << ", " << BNTs[i].C << ", " << BNTs[i].z << endl;
 				if (count == 5) break;
 			}
 		}
 	}
+};
 
-	// Question 3
+void Question3(vector<BNT>& BNTs) {
 	cout << "Question 3: " << endl;
 	for (int i = 0; i < BNTs.size(); i++) {
 		if (BNTs[i].A >= 3 && BNTs[i].B >= 3 && BNTs[i].C >= 3 && BNTs[i].A <= 20 && BNTs[i].B <= 20 && BNTs[i].C <= 20) {
-			printBNT(BNTs[i]);
+			cout << BNTs[i].sum << ": " << BNTs[i].A << ", " << BNTs[i].x << ", " << BNTs[i].B << ", " << BNTs[i].y << ", " << BNTs[i].C << ", " << BNTs[i].z << endl;
 		}
 	}
+};
 
-	// Question 5
+void Question4(vector<BNT>& BNTs) {};
+
+void Question5(vector<BNT>& BNTs) {
 	cout << "Question 5: " << endl;
-	count = 0, bnt = 0;
+	int count = 0, bnt = 0;
 	for (int i = 0; i < BNTs.size(); i++) {
 		if (BNTs[i].sum != bnt) {
 			bnt = BNTs[i].sum;
 			if (!isPrime(bnt)) {
 				count++;
-				printBNT(BNTs[i]);
+				cout << BNTs[i].sum << ": " << BNTs[i].A << ", " << BNTs[i].x << ", " << BNTs[i].B << ", " << BNTs[i].y << ", " << BNTs[i].C << ", " << BNTs[i].z << endl;
 				if (count == 10) break;
 			}
 		}
 	}
+};
 
-	// Question 7
-	int low, high;
+void Question6() {
+	int x = 0;
+	for (int i = 32; i <= 316; i++) {
+		if (i % 3 == 0) {
+			// 2^(4x-1)+2^(4x-1)=16^x
+			// BNT=9x+18
+			x = (pow(i, 2) - 18) / 9;
+			cout << i << "^2= " << pow(i, 2) << ": 2, " << 4 * x - 1 << ", 2, " << 4 * x - 1 << ", 16, " << x << endl;
+		}
+		else {
+			// 2^x+2^x=2^(x+1)
+			// BNT=3x+7
+			x = (pow(i, 2) - 7) / 3;
+			cout << i << "^2= " << pow(i, 2) << ": 2, " << x << ", 2, " << x << ", 2, " << x + 1 << endl;
+		}
+	}
+};
 
-	std::time_t endTime = std::time(nullptr);
+void Question7(vector<BNT>& BNTs) {
+	int minimum, maximum;
+	for (;;) {
+		cout << "Input a minimum number (" << BNTs[0].sum << "~" << BNTs[BNTs.size() - 1].sum << "): ";
+		cin >> minimum;
+		if (minimum < BNTs[0].sum || minimum > BNTs[BNTs.size() - 1].sum) {
+			cout << "Please input a valid value." << endl;
+		}
+		else break;
+	}
+	for (;;) {
+		cout << "Input a maximum number (" << minimum << "~" << BNTs[BNTs.size() - 1].sum << "): ";
+		cin >> maximum;
+		if (maximum < minimum || maximum > BNTs[BNTs.size() - 1].sum) {
+			cout << "please input a valid value. " << endl;
+		}
+		else break;
+	}
+	int counter[1000] = { 0 };
+	for (int i = 0; i < BNTs.size(); i++) {
+		counter[BNTs[i].sum]++;
+	}
+	cout << "BNT | count | histogram " << endl;
+	for (int i = minimum; i <= maximum; i++) {
+		if (!counter[i]) continue;
+		cout << left << setw(3) << i << " | " << left << setw(5) << counter[i] << " | ";
+		for (int j = 0; j < counter[i]; j++) {
+			cout << "o";
+		}
+		cout << endl;
+	}
+};
 
-	cout << endl << "Costing time: " << endTime - beginTime << "s" << endl;
-	return 0;
-}
+void Question8(vector<BNT>& BNTs) {
+	int i = BNTs.size() - 1;
+	while (BNTs[i].A == 2 || BNTs[i].B == 2 || BNTs[i].C == 2)
+	{
+		i--;
+		if (i == 0) break;
+	}
+	cout << BNTs[i].sum << ": " << BNTs[i].A << ", " << BNTs[i].x << ", " << BNTs[i].B << ", " << BNTs[i].y << ", " << BNTs[i].C << ", " << BNTs[i].z << endl;
+};

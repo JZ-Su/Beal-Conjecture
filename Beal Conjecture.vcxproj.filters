@@ -18,5 +18,11 @@
     <ClCompile Include="Beal Conjecture.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="class.h">
+      <Filter>头文件</Filter>
+    </ClCompile>
+    <ClCompile Include="class.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
