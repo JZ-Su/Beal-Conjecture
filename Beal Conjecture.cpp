@@ -9,6 +9,8 @@
 #include "class.h"
 
 #include <ctime>
+#include <future>
+#include <chrono>
 
 #define MinBase 2
 #define MaxBase 256
@@ -42,6 +44,25 @@ void Question7(vector<BNT>&);
 void Question8(vector<BNT>&);
 void PrintAll(vector<BNT>&);
 
+vector<BNT> matchBNT(int i, vector<Power> hashTable[]) {
+	vector<BNT> BNTlist;
+	for (int j = 0; j < hashTable[i].size(); j++) {
+		for (int x = 0; x < 10; x++) {
+			for (int y = 0; y < hashTable[x].size(); y++) {
+				if (_Gcd(hashTable[i][j].base, hashTable[x][y].base) == 1) continue;
+				int mantissa = (i + x) % 10;
+				for (int m = 0; m < hashTable[mantissa].size(); m++) {
+					if ((hashTable[i][j] + hashTable[x][y]) == hashTable[mantissa][m]) {
+						BNTlist.push_back(BNT(hashTable[i][j].base, hashTable[x][y].base, hashTable[mantissa][m].base, hashTable[i][j].exponent, hashTable[x][y].exponent, hashTable[mantissa][m].exponent));
+					}
+				}
+			}
+		}
+	}
+	loading++;
+	return BNTlist;
+};
+
 int main() {
 	std::time_t beginTime = time(nullptr);
 	thread ld(isLoading);
@@ -67,22 +88,47 @@ int main() {
 	}
 	loading++;
 
+	//for (int i = 0; i < 10; i++) {
+	//	for (int j = 0; j < hashTable[i].size(); j++) {
+	//		for (int x = 0; x < 10; x++) {
+	//			for (int y = 0; y < hashTable[x].size(); y++) {
+	//				if (_Gcd(hashTable[i][j].base, hashTable[x][y].base) == 1) continue;
+	//				int mantissa = (i + x) % 10;
+	//				for (int m = 0; m < hashTable[mantissa].size(); m++) {
+	//					if ((hashTable[i][j] + hashTable[x][y]) == hashTable[mantissa][m]) {
+	//						BNTs.push_back(BNT(hashTable[i][j].base, hashTable[x][y].base, hashTable[mantissa][m].base, hashTable[i][j].exponent, hashTable[x][y].exponent, hashTable[mantissa][m].exponent));
+	//					}
+	//				}
+	//			}
+	//		}
+	//	}
+	//	loading++;
+	//}
+
+	future<vector<BNT>> BNTlist[10];
 	for (int i = 0; i < 10; i++) {
-		for (int j = 0; j < hashTable[i].size(); j++) {
-			for (int x = 0; x < 10; x++) {
-				for (int y = 0; y < hashTable[x].size(); y++) {
-					if (_Gcd(hashTable[i][j].base, hashTable[x][y].base) == 1) continue;
-					int mantissa = (i + x) % 10;
-					for (int m = 0; m < hashTable[mantissa].size(); m++) {
-						if ((hashTable[i][j] + hashTable[x][y]) == hashTable[mantissa][m]) {
-							BNTs.push_back(BNT(hashTable[i][j].base, hashTable[x][y].base, hashTable[mantissa][m].base, hashTable[i][j].exponent, hashTable[x][y].exponent, hashTable[mantissa][m].exponent));
-						}
-					}
-				}
+		BNTlist[i] = async(matchBNT, i, hashTable);
+	}
+
+	bool flag;
+	while (true) {
+		flag = true;
+		for (int i = 0; i < 10; i++) {
+			if (BNTlist[i].wait_for(chrono::seconds(1)) != future_status::ready) {
+				flag = false;
+				continue;
 			}
 		}
-		loading++;
+		if (flag) {
+			break;
+		}
 	}
+	for (int i = 0; i < 10; i++) {
+		for (const auto& value : BNTlist[i].get()) {
+			BNTs.push_back(value);
+		}
+	}
+
 	quickSort(BNTs, 0, BNTs.size() - 1);
 	loading++;
 	ld.join();

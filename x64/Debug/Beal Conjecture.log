@@ -1,7 +1,7 @@
 ﻿  Beal Conjecture.cpp
-H:\Desktop\Beal-Conjecture\Beal Conjecture.cpp(56,27): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
-H:\Desktop\Beal-Conjecture\Beal Conjecture.cpp(86,33): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-H:\Desktop\Beal-Conjecture\Beal Conjecture.cpp(317,25): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
-H:\Desktop\Beal-Conjecture\Beal Conjecture.cpp(323,24): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
-H:\Desktop\Beal-Conjecture\Beal Conjecture.cpp(363,8): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+H:\Desktop\Beal-Conjecture\Beal Conjecture.cpp(77,27): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+H:\Desktop\Beal-Conjecture\Beal Conjecture.cpp(163,33): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+H:\Desktop\Beal-Conjecture\Beal Conjecture.cpp(394,25): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+H:\Desktop\Beal-Conjecture\Beal Conjecture.cpp(400,24): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+H:\Desktop\Beal-Conjecture\Beal Conjecture.cpp(440,8): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
   Beal Conjecture.vcxproj -> H:\Desktop\Beal-Conjecture\x64\Debug\Beal Conjecture.exe
