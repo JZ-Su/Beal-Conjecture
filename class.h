@@ -3,11 +3,16 @@
 class Power
 {
 public:
-	Power();
 	int base;
 	int exponent;
 	int secondDigit;
 	unsigned long long firstDigit;
+	Power() {
+		base = 0;
+		exponent = 0;
+		secondDigit = 0;
+		firstDigit = 0;
+	};
 	Power operator+ (const Power& p) {
 		Power res;
 		res.firstDigit = this->firstDigit + p.firstDigit;
@@ -26,18 +31,14 @@ public:
 	}
 };
 
-Power::Power() :base(0), exponent(0), secondDigit(0), firstDigit(0) {}
-
-class BNT
+class bnt
 {
 public:
-	BNT(int A, int B, int C, int x, int y, int z);
 	int sum;
 	int A, B, C;
 	int x, y, z;
+	bnt(int A, int B, int C, int x, int y, int z) : A(A), B(B), C(C), x(x), y(y), z(z) {
+		sum = A + B + C + x + y + z;
+	};
+	virtual void print() {};
 };
-
-BNT::BNT(int A, int B, int C, int x, int y, int z) : A(A), B(B), C(C), x(x), y(y), z(z)
-{
-	sum = A + B + C + x + y + z;
-}
