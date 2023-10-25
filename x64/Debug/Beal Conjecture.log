@@ -1,8 +1,0 @@
-﻿  Beal Conjecture.cpp
-C:\Users\41462\Desktop\Beal-Conjecture\Beal Conjecture.cpp(87,27): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
-C:\Users\41462\Desktop\Beal-Conjecture\Beal Conjecture.cpp(126,33): warning C4267: “参数”: 从“size_t”转换到“int”，可能丢失数据
-C:\Users\41462\Desktop\Beal-Conjecture\Beal Conjecture.cpp(360,25): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
-C:\Users\41462\Desktop\Beal-Conjecture\Beal Conjecture.cpp(366,24): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
-C:\Users\41462\Desktop\Beal-Conjecture\Beal Conjecture.cpp(420,8): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
-x64\Debug\class.obj : warning LNK4042: 对象被多次指定；已忽略多余的指定
-  Beal Conjecture.vcxproj -> C:\Users\41462\Desktop\Beal-Conjecture\x64\Debug\Beal Conjecture.exe
