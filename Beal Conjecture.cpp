@@ -11,11 +11,12 @@
 #include <ctime>
 #include <future>
 #include <chrono>
+#include <limits>
 
 #define MinBase 2
-#define MaxBase 256
+#define MaxBase 512
 #define MinExponent 3
-#define MaxExponent 20
+#define MaxExponent 95
 
 using namespace std;
 
@@ -97,23 +98,6 @@ int main() {
 	}
 	loading++;
 
-	//for (int i = 0; i < 10; i++) {
-	//	for (int j = 0; j < hashTable[i].size(); j++) {
-	//		for (int x = 0; x < 10; x++) {
-	//			for (int y = 0; y < hashTable[x].size(); y++) {
-	//				if (_Gcd(hashTable[i][j].base, hashTable[x][y].base) == 1) continue;
-	//				int mantissa = (i + x) % 10;
-	//				for (int m = 0; m < hashTable[mantissa].size(); m++) {
-	//					if ((hashTable[i][j] + hashTable[x][y]) == hashTable[mantissa][m]) {
-	//						BNTs.push_back(BNT(hashTable[i][j].base, hashTable[x][y].base, hashTable[mantissa][m].base, hashTable[i][j].exponent, hashTable[x][y].exponent, hashTable[mantissa][m].exponent));
-	//					}
-	//				}
-	//			}
-	//		}
-	//	}
-	//	loading++;
-	//}
-
 	future<vector<BNT>> BNTlist[10];
 	for (int i = 0; i < 10; i++) {
 		BNTlist[i] = async(matchBNT, i, hashTable);
@@ -125,7 +109,7 @@ int main() {
 		for (int i = 0; i < 10; i++) {
 			if (BNTlist[i].wait_for(chrono::seconds(1)) != future_status::ready) {
 				flag = false;
-				continue;
+				break;
 			}
 		}
 		if (flag) {
@@ -136,6 +120,7 @@ int main() {
 		for (const auto& value : BNTlist[i].get()) {
 			BNTs.push_back(value);
 		}
+		vector<Power>().swap(hashTable[i]);
 	}
 
 	quickSort(BNTs, 0, BNTs.size() - 1);
@@ -145,7 +130,7 @@ int main() {
 	std::time_t endTime = time(nullptr);
 	cout << endl << "Costing time: " << endTime - beginTime << "s" << endl << endl;
 
-	int questionNum = 0;
+	char questionNum = '0';
 	cout << "Question 1: Find the first five distinct and lowest BNTs." << endl;
 	cout << "Question 2: Find the first five BNTs that are prime numbers." << endl;
 	cout << "Question 3: Find the BNTs where A, B, C belong to [3, 20] and x, y, z belong to [3, 15]." << endl;
@@ -157,41 +142,44 @@ int main() {
 	cout << "Enter 9 to show all the BNTs." << endl;
 
 	do {
-		cout << endl << "Input a question number (1~9, 0 or other to exit): ";
-		cin >> questionNum;
+		cout << endl << "Input a question number (1~9, 0 to exit): ";
+		cin.get(questionNum);
+		cin.ignore((numeric_limits<streamsize>::max)(), '\n');
 		cout << endl;
 		switch (questionNum)
 		{
-		case 1:
+		case '1':
 			Question1(BNTs);
 			break;
-		case 2:
+		case '2':
 			Question2(BNTs);
 			break;
-		case 3:
+		case '3':
 			Question3(BNTs);
 			break;
-		case 4:
+		case '4':
 			Question4(BNTs);
 			break;
-		case 5:
+		case '5':
 			Question5(BNTs);
 			break;
-		case 6:
+		case '6':
 			Question6();
 			break;
-		case 7:
+		case '7':
 			Question7(BNTs);
 			break;
-		case 8:
+		case '8':
 			Question8(BNTs);
 			break;
-		case 9:
+		case '9':
 			PrintAll(BNTs);
 			break;
-		case 0:
-		default:
+		case '0':
 			return 0;
+		default:
+			cout << "Please input a valid number! " << endl;
+			break;
 		}
 	} while (true);
 
@@ -275,7 +263,6 @@ void Question1(vector<BNT>& BNTs) {
 			bnt = BNTs[i].sum;
 			count++;
 			BNTs[i].print();
-			//cout << BNTs[i].sum << ": " << BNTs[i].A << ", " << BNTs[i].x << ", " << BNTs[i].B << ", " << BNTs[i].y << ", " << BNTs[i].C << ", " << BNTs[i].z << endl;
 			if (count == 5) break;
 		}
 	}
@@ -290,7 +277,6 @@ void Question2(vector<BNT>& BNTs) {
 			if (isPrime(bnt)) {
 				count++;
 				BNTs[i].print();
-				//cout << BNTs[i].sum << ": " << BNTs[i].A << ", " << BNTs[i].x << ", " << BNTs[i].B << ", " << BNTs[i].y << ", " << BNTs[i].C << ", " << BNTs[i].z << endl;
 				if (count == 5) break;
 			}
 		}
@@ -302,7 +288,6 @@ void Question3(vector<BNT>& BNTs) {
 	for (int i = 0; i < BNTs.size(); i++) {
 		if (BNTs[i].A >= 3 && BNTs[i].B >= 3 && BNTs[i].C >= 3 && BNTs[i].A <= 20 && BNTs[i].B <= 20 && BNTs[i].C <= 20 && BNTs[i].x <= 15 && BNTs[i].y <= 15 && BNTs[i].z <= 15) {
 			BNTs[i].print();
-			//cout << BNTs[i].sum << ": " << BNTs[i].A << ", " << BNTs[i].x << ", " << BNTs[i].B << ", " << BNTs[i].y << ", " << BNTs[i].C << ", " << BNTs[i].z << endl;
 		}
 	}
 };
@@ -360,7 +345,6 @@ void Question5(vector<BNT>& BNTs) {
 			if (!isPrime(bnt)) {
 				count++;
 				BNTs[i].print();
-				//cout << BNTs[i].sum << ": " << BNTs[i].A << ", " << BNTs[i].x << ", " << BNTs[i].B << ", " << BNTs[i].y << ", " << BNTs[i].C << ", " << BNTs[i].z << endl;
 				if (count == 10) break;
 			}
 		}
@@ -390,6 +374,13 @@ void Question7(vector<BNT>& BNTs) {
 	for (;;) {
 		cout << "Input a minimum number (" << BNTs[0].sum << "~" << BNTs[BNTs.size() - 1].sum << "): ";
 		cin >> minimum;
+		cin.ignore((numeric_limits<streamsize>::max)(), '\n');
+		if (cin.fail()) {
+			cout << "Please input a valid value. " << endl;
+			cin.clear();
+			cin.ignore((numeric_limits<streamsize>::max)(), '\n');
+			continue;
+		}
 		if (minimum < BNTs[0].sum || minimum > BNTs[BNTs.size() - 1].sum) {
 			cout << "Please input a valid value." << endl;
 		}
@@ -398,18 +389,25 @@ void Question7(vector<BNT>& BNTs) {
 	for (;;) {
 		cout << "Input a maximum number (" << minimum << "~" << BNTs[BNTs.size() - 1].sum << "): ";
 		cin >> maximum;
+		cin.ignore((numeric_limits<streamsize>::max)(), '\n');
+		if (cin.fail()) {
+			cout << "Please input a valid value. " << endl;
+			cin.clear();
+			cin.ignore((numeric_limits<streamsize>::max)(), '\n');
+			continue;
+		}
 		if (maximum < minimum || maximum > BNTs[BNTs.size() - 1].sum) {
-			cout << "please input a valid value. " << endl;
+			cout << "Please input a valid value. " << endl;
 		}
 		else break;
 	}
-	int counter[1000] = { 0 };
+	int counter[1500] = { 0 };
 	for (int i = 0; i < BNTs.size(); i++) {
 		counter[BNTs[i].sum]++;
 	}
 	cout << "BNT | count | histogram " << endl;
 	for (int i = minimum; i <= maximum; i++) {
-		if (!counter[i]) continue;
+		//if (!counter[i]) continue;
 		cout << left << setw(3) << i << " | " << left << setw(5) << counter[i] << " | ";
 		for (int j = 0; j < counter[i]; j++) {
 			cout << "o";
@@ -425,12 +423,10 @@ void Question8(vector<BNT>& BNTs) {
 		if (i == 0) break;
 	}
 	BNTs[i].print();
-	//cout << BNTs[i].sum << ": " << BNTs[i].A << ", " << BNTs[i].x << ", " << BNTs[i].B << ", " << BNTs[i].y << ", " << BNTs[i].C << ", " << BNTs[i].z << endl;
 };
 
 void PrintAll(vector<BNT>& BNTs) {
 	for (int i = 0; i < BNTs.size(); i++) {
 		BNTs[i].print();
-		//cout << BNTs[i].sum << ": " << BNTs[i].A << ", " << BNTs[i].x << ", " << BNTs[i].B << ", " << BNTs[i].y << ", " << BNTs[i].C << ", " << BNTs[i].z << endl;
 	}
 }

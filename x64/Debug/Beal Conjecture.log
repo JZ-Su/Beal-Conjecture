@@ -1,18 +1,8 @@
 ﻿  Beal Conjecture.cpp
-<<<<<<< HEAD
-H:\Desktop\Beal-Conjecture\Beal Conjecture.cpp(77,27): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
-H:\Desktop\Beal-Conjecture\Beal Conjecture.cpp(163,33): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-H:\Desktop\Beal-Conjecture\Beal Conjecture.cpp(394,25): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
-H:\Desktop\Beal-Conjecture\Beal Conjecture.cpp(400,24): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
-H:\Desktop\Beal-Conjecture\Beal Conjecture.cpp(440,8): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-  Beal Conjecture.vcxproj -> H:\Desktop\Beal-Conjecture\x64\Debug\Beal Conjecture.exe
-=======
-C:\Users\41462\Desktop\Beal-Conjecture\Beal Conjecture.cpp(65,27): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
-C:\Users\41462\Desktop\Beal-Conjecture\Beal Conjecture.cpp(95,33): warning C4267: “参数”: 从“size_t”转换到“int”，可能丢失数据
-C:\Users\41462\Desktop\Beal-Conjecture\Beal Conjecture.cpp(330,25): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
-C:\Users\41462\Desktop\Beal-Conjecture\Beal Conjecture.cpp(336,24): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
-C:\Users\41462\Desktop\Beal-Conjecture\Beal Conjecture.cpp(376,8): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
-  class.h
-  正在生成代码...
+C:\Users\41462\Desktop\Beal-Conjecture\Beal Conjecture.cpp(87,27): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
+C:\Users\41462\Desktop\Beal-Conjecture\Beal Conjecture.cpp(126,33): warning C4267: “参数”: 从“size_t”转换到“int”，可能丢失数据
+C:\Users\41462\Desktop\Beal-Conjecture\Beal Conjecture.cpp(360,25): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
+C:\Users\41462\Desktop\Beal-Conjecture\Beal Conjecture.cpp(366,24): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
+C:\Users\41462\Desktop\Beal-Conjecture\Beal Conjecture.cpp(420,8): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+x64\Debug\class.obj : warning LNK4042: 对象被多次指定；已忽略多余的指定
   Beal Conjecture.vcxproj -> C:\Users\41462\Desktop\Beal-Conjecture\x64\Debug\Beal Conjecture.exe
->>>>>>> 604da07e154ad7a474a952d6aa5d8313427be555

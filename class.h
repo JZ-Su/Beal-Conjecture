@@ -40,5 +40,5 @@ public:
 	bnt(int A, int B, int C, int x, int y, int z) : A(A), B(B), C(C), x(x), y(y), z(z) {
 		sum = A + B + C + x + y + z;
 	};
-	virtual void print() {};
+	virtual void print() = 0;
 };
